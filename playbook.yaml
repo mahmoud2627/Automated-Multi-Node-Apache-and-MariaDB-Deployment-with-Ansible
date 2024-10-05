@@ -1,0 +1,22 @@
+---
+- hosts: apache_servers
+  become: yes
+  roles:
+    - role: apache
+    - role: firewall
+      vars:
+        firewall_services:
+          - { service: http, zone: public }
+          - { service: https, zone: public }  # Optional for SSL
+
+- hosts: db_servers
+  become: yes
+  vars_files:  # Corrected indentation
+    - group_vars/all/vault.yml
+  roles:
+    - role: db
+    - role: firewall
+      vars:
+        firewall_services:
+          - { service: mysql, zone: public }
+

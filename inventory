@@ -1,0 +1,7 @@
+[apache_servers] 
+managed-1  
+managed-2
+
+[db_servers]  
+managed-3
+managed-4
