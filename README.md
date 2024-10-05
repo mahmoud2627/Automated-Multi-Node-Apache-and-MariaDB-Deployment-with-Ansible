@@ -1,5 +1,6 @@
 # Automated-Multi-Node-Apache-and-MariaDB-Deployment-with-Ansible
 
+![Screenshot 2024-10-05 193729](https://github.com/user-attachments/assets/0d8cd9fd-01be-4a99-a063-697def9d45d3)
 
 
 ## Objective:
