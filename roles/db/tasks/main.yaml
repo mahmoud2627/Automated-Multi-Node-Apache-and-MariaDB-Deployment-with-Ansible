@@ -1,0 +1,44 @@
+---
+- name: Add MySQL community repository
+  ansible.builtin.yum_repository:
+    name: mysql80-community
+    description: MySQL 8.0 Community Server
+    baseurl: https://repo.mysql.com/yum/mysql-8.0-el7-x86_64/
+    enabled: yes
+    gpgcheck: yes
+    gpgkey: https://repo.mysql.com/RPM-GPG-KEY-mysql
+
+- name: Update yum cache
+  ansible.builtin.yum:
+    name: '*'
+    state: latest
+
+- name: Install Python 3 and pip
+  ansible.builtin.yum:
+    name:
+      - python3
+      - python3-pip
+    state: present
+
+- name: Install PyMySQL using pip
+  ansible.builtin.pip:
+    name: PyMySQL
+    executable: python3
+
+- name: Install MySQL
+  ansible.builtin.yum:
+    name: mysql-community-server
+    state: present
+
+- name: Start and enable MySQL
+  ansible.builtin.systemd:
+    name: mysqld
+    state: started
+    enabled: yes
+
+- name: Set MySQL root password
+  ansible.builtin.mysql_user:
+    name: root
+    password: "{{ mysql_root_password }}"
+    login_unix_socket: /var/lib/mysql/mysql.sock
+    state: present

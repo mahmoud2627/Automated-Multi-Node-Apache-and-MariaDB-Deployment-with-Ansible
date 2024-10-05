@@ -1,0 +1,28 @@
+---
+- name: Install Apache
+  ansible.builtin.yum:
+    name: httpd
+    state: present
+
+- name: Start and enable Apache
+  ansible.builtin.service:
+    name: httpd
+    state: started
+    enabled: true
+
+- name: Deploy custom index.html
+  ansible.builtin.template:
+    src: "{{ playbook_dir }}/roles/apache/templates/index.html.j2"
+    dest: /var/www/html/index.html
+    mode: '0644'
+  notify:
+    - Restart Apache
+
+- name: Ensure HTTPD is listening on port 80
+  ansible.builtin.lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    regexp: '^Listen'
+    line: 'Listen 80'
+    state: present
+    backup: yes
+  notify: Restart httpd

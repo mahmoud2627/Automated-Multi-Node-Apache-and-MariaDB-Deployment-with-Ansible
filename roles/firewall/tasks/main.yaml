@@ -1,0 +1,25 @@
+---
+- name: Ensure firewalld is installed
+  ansible.builtin.yum:
+    name: firewalld
+    state: present
+
+- name: Start and enable firewalld
+  ansible.builtin.service:
+    name: firewalld
+    state: started
+    enabled: true
+
+- name: Configure firewall rules for services
+  ansible.builtin.firewalld:
+    service: "{{ item.service }}"
+    permanent: true
+    state: enabled
+    immediate: yes
+    zone: "{{ item.zone }}"
+  with_items: "{{ firewall_services }}"
+
+- name: Reload firewall to apply changes
+  ansible.builtin.service:
+    name: firewalld
+    state: reloaded
